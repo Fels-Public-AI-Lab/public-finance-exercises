@@ -10,3 +10,11 @@ platform and reference assignments are available at
 
 Exercises have been modified for use in MPA coursework at the Fels Institute 
 of Government, University of Pennsylvania.
+
+## Exercises
+
+| Exercise | Live Demo |
+|----------|-----------|
+| Sales Tax Revenue Forecasting | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/sales-tax-revenue-forecasting/) |
+| Budget Trend Analysis | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/budget-trend-analysis/) |
+| Personnel Budget | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/personnel-budget/) |
