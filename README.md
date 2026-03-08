@@ -18,3 +18,4 @@ of Government, University of Pennsylvania.
 | Sales Tax Revenue Forecasting | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/sales-tax-revenue-forecasting/) |
 | Budget Trend Analysis | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/budget-trend-analysis/) |
 | Personnel Budget | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/personnel-budget/) |
+| Nonprofit Cash Flow & Liquidity | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/nonprofit-cash-flow/) |
