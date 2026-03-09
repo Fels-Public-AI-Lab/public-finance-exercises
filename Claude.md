@@ -96,6 +96,7 @@ Insert **once** inside `.sidebar-brand`, before the `<h1>` tag. Never use a rela
 | 2 | `budget-trend-analysis/` | — | ✅ Live |
 | 3 | `personnel-budget/` | — | ✅ Live |
 | 4 | `nonprofit-cash-flow/` | Net cash flow, cumulative position, months of liquidity, scenario analysis | ✅ Live |
+| 5 | `capital-fund-planning/` | CIP scheduling, funding source allocation, bond amortization, operating budget impact | ✅ Live |
 
 ## Formulas Reference
 
@@ -103,6 +104,19 @@ Insert **once** inside `.sidebar-brand`, before the `<h1>` tag. Never use a rela
 - **Real Dollars:** `=($C$248/C4)*B4` — adjust nominal to current-dollar terms using CPI ratio
 - **YoY % Change:** `=((D16-D4)/D4)*100` — same month prior year, starts row 16
 - **Moving Average:** `=AVERAGE(E16:E27)` — 12-month rolling window, starts row 27
+
+### Exercise 5 — Capital Fund Planning
+- **CIP Annual Total:** `=SUM(B3:B10)` — sum all projects in a fiscal year column; `=SUM(B3:F3)` — sum all years for a project row
+- **Federal Formula:** `=B4*0.40` — 40% of annual capital need
+- **State Assistance:** `=B4*0.20` — 20% of annual capital need
+- **Local Bonds:** `=B4-B5-B6-B7` — residual after federal formula, state, discretionary
+- **Bond PMT:** `=ABS(PMT(C3,D3,-B3))` — level annual debt service on $505M, 4.5%, 20-year bond ≈ $38,822,453
+- **Debt Service Interest:** `=B6*$C$3` — beginning balance × rate (absolute rate ref)
+- **Debt Service Principal:** `=C6-D6` — annual payment minus interest
+- **Ending Balance:** `=B6-E6` — beginning minus principal; Year 20 should be $0
+- **Operating Budget Growth:** `=B4*1.03` — compound 3% annual growth from $1.74B base
+- **DS Ratio:** `=B5/B4*100` — debt service as % of operating budget
+- **Federal Leverage:** `=(B5+B7)/B8` — (formula + discretionary) / local bonds
 
 ### Exercise 4 — Nonprofit Cash Flow
 - **Net Cash Flow:** `=B4-C4` — revenue received minus operating expenses
