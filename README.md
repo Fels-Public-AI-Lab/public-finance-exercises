@@ -19,3 +19,4 @@ of Government, University of Pennsylvania.
 | Budget Trend Analysis | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/budget-trend-analysis/) |
 | Personnel Budget | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/personnel-budget/) |
 | Nonprofit Cash Flow & Liquidity | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/nonprofit-cash-flow/) |
+| Capital Fund Planning | [Launch](https://fels-public-ai-lab.github.io/public-finance-exercises/capital-fund-planning/) |
