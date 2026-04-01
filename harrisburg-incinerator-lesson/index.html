@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Harrisburg Incinerator Project – A Cautionary Tale in Public Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root {
+  --penn-blue:#011F5B; --penn-maroon:#990000; --emerald:#2d6a4f;
+  --coral:#c44536; --amber:#c47a1a; --sky:#778da9; --steel:#415a77;
+  --cream:#f5f0e8; --warm-white:#faf8f4; --sand:#e8e0d0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--cream);color:var(--steel);overflow-x:hidden}
+
+/* TOP BAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--penn-blue);height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem}
+#topbar-brand{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+#topbar-center{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(255,255,255,.6)}
+#topbar-counter{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.05em}
+
+/* PROGRESS */
+#progress{position:fixed;top:48px;left:0;right:0;height:3px;background:rgba(255,255,255,.15);z-index:99}
+#progress-fill{height:100%;background:var(--penn-maroon);transition:width .35s ease}
+
+/* SLIDES */
+#slides{padding-top:51px}
+.slide{display:none;min-height:calc(100vh - 51px);padding:3rem 1.5rem 5rem}
+.slide.active{display:block}
+.slide-inner{max-width:900px;margin:0 auto}
+
+/* DIVIDER */
+.slide-divider{display:none;min-height:calc(100vh - 51px);align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.slide-divider.active{display:flex}
+.slide-divider::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,255,255,.05) 0%,transparent 70%)}
+.divider-inner{position:relative;z-index:1}
+.divider-part{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.9rem}
+.divider-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2rem,5vw,3rem);color:#fff;line-height:1.15;margin-bottom:.65rem}
+.divider-sub{font-size:1rem;color:rgba(255,255,255,.72);max-width:500px;margin:0 auto}
+.part1{background:linear-gradient(135deg,#990000 0%,#011F5B 60%)}
+.part2{background:linear-gradient(135deg,#7a4d0a 0%,#011F5B 60%)}
+.part3{background:linear-gradient(135deg,#7a1a1a 0%,#011F5B 60%)}
+.part4{background:linear-gradient(135deg,#1d4a36 0%,#011F5B 60%)}
+.part5{background:linear-gradient(135deg,#1a3a7a 0%,#7a1a1a 60%)}
+
+/* TITLE SLIDE */
+.slide-title{background:linear-gradient(135deg,#011F5B 0%,#1a0a3a 60%);display:none;min-height:calc(100vh - 51px);align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.slide-title.active{display:flex}
+.slide-title::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(153,0,0,.15) 0%,transparent 60%)}
+.title-inner{position:relative;z-index:1;max-width:750px}
+.title-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1.25rem}
+.title-h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,6vw,3.6rem);color:#fff;line-height:1.1;margin-bottom:.7rem}
+.title-sub{font-size:1.05rem;color:rgba(255,255,255,.65);margin-bottom:2rem}
+.title-meta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.title-meta span{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.2);padding:.3rem .7rem;border-radius:3px}
+.title-deco{position:absolute;right:-1rem;bottom:-1.5rem;font-family:'DM Serif Display',Georgia,serif;font-size:clamp(5rem,18vw,11rem);color:rgba(255,255,255,.03);pointer-events:none;z-index:0;line-height:1;user-select:none}
+
+/* TYPOGRAPHY */
+h2{font-family:'DM Serif Display',Georgia,serif;font-size:1.9rem;color:var(--penn-blue);margin-bottom:1.25rem;line-height:1.2}
+h3{font-family:'DM Serif Display',Georgia,serif;font-size:1.3rem;color:var(--penn-blue);margin-bottom:.6rem}
+p{line-height:1.65;margin-bottom:.85rem}
+p:last-child{margin-bottom:0}
+.lead{font-size:1.05rem;line-height:1.7;color:var(--steel);margin-bottom:1rem}
+
+/* CALLOUTS */
+.callout{border-left:4px solid;border-radius:0 6px 6px 0;padding:.9rem 1rem;margin-bottom:.9rem}
+.callout-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;margin-bottom:.4rem}
+.callout-info{border-color:var(--penn-blue);background:rgba(1,31,91,.06)}
+.callout-info .callout-title{color:var(--penn-blue)}
+.callout-success{border-color:var(--emerald);background:rgba(45,106,79,.07)}
+.callout-success .callout-title{color:var(--emerald)}
+.callout-warning{border-color:var(--amber);background:rgba(196,122,26,.07)}
+.callout-warning .callout-title{color:var(--amber)}
+.callout-failure{border-color:var(--coral);background:rgba(196,69,54,.07)}
+.callout-failure .callout-title{color:var(--coral)}
+
+/* DEF BOX */
+.def-box{background:var(--penn-blue);color:#fff;border-radius:6px;padding:1rem 1.25rem;margin-bottom:.9rem}
+.def-box .def-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.35rem}
+.def-box p{color:rgba(255,255,255,.9);margin-bottom:0}
+
+/* STEP CARDS */
+.step-list{display:flex;flex-direction:column;gap:.65rem;margin-bottom:.9rem}
+.step-card{display:flex;gap:.85rem;align-items:flex-start;background:var(--warm-white);border:1px solid var(--sand);border-radius:8px;padding:.8rem 1rem}
+.step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#fff}
+.n-blue{background:var(--penn-blue)} .n-emerald{background:var(--emerald)} .n-amber{background:var(--amber)} .n-coral{background:var(--coral)}
+.step-card p{margin-bottom:0}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:.9rem}
+.stat-card{border-radius:8px;padding:1rem;display:flex;flex-direction:column;gap:.25rem}
+.sc-blue{background:var(--penn-blue);color:#fff} .sc-coral{background:var(--coral);color:#fff} .sc-emerald{background:var(--emerald);color:#fff} .sc-neutral{background:var(--sand)}
+.stat-val{font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;line-height:1}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+
+/* GRIDS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.9rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:.9rem}
+
+/* PULL QUOTE */
+.pull-quote{border-left:4px solid var(--sand);padding:.7rem 1.25rem;margin:1rem 0}
+.pull-quote p{font-style:italic;font-size:1.05rem;color:var(--steel);margin-bottom:.3rem}
+.pull-quote cite{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky);font-style:normal}
+
+/* PRO / CON */
+.pro-con{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.9rem}
+.pro-panel{background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.2);border-radius:8px;padding:1rem}
+.con-panel{background:rgba(196,69,54,.08);border:1px solid rgba(196,69,54,.2);border-radius:8px;padding:1rem}
+.panel-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;margin-bottom:.6rem}
+.pro-panel .panel-title{color:var(--emerald)} .con-panel .panel-title{color:var(--coral)}
+.pro-panel ul,.con-panel ul{list-style:none;padding-left:0}
+.pro-panel li,.con-panel li{font-size:.9rem;margin-bottom:.4rem}
+
+/* AGENDA */
+.agenda-list{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.9rem}
+.agenda-row{display:flex;align-items:center;gap:1rem;background:var(--warm-white);border:1px solid var(--sand);border-radius:6px;padding:.7rem 1rem}
+.agenda-part{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);min-width:60px}
+.agenda-title{flex:1;font-weight:400}
+.agenda-time{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--sky)}
+
+/* PHOTO */
+.photo-slot{margin-bottom:.7rem}
+.photo-slot img{width:100%;object-fit:cover;display:block;border-radius:8px}
+.photo-caption{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--sky);margin-top:.3rem;text-align:center}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.9rem}
+.timeline-item{display:flex;gap:.85rem;align-items:flex-start}
+.t-year{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--penn-maroon);min-width:45px;padding-top:.15rem}
+.t-content{flex:1;border-left:2px solid var(--sand);padding-left:.8rem;padding-bottom:.45rem}
+.t-content p{margin-bottom:0;font-size:.91rem}
+
+/* VISUAL TIMELINE */
+.visual-timeline{position:relative;margin:1.25rem 0 1rem;padding:1.25rem 1rem 0;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));border:1px solid var(--sand);border-radius:14px}
+.vt-track{position:absolute;left:8%;right:8%;top:78px;height:4px;background:linear-gradient(90deg,var(--penn-blue) 0%,var(--penn-maroon) 45%,var(--coral) 100%);border-radius:999px}
+.vt-grid{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem}
+.vt-item{position:relative;padding-top:.2rem}
+.vt-item::before{content:'';display:block;width:14px;height:14px;border-radius:50%;background:var(--warm-white);border:4px solid var(--penn-blue);margin:52px auto 0;position:relative;z-index:1;box-shadow:0 0 0 5px rgba(1,31,91,.08)}
+.vt-item.milestone::before{border-color:var(--penn-maroon);box-shadow:0 0 0 5px rgba(153,0,0,.08)}
+.vt-item.crisis::before{border-color:var(--coral);box-shadow:0 0 0 5px rgba(196,69,54,.08)}
+.vt-year{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--penn-blue);text-align:center;margin-bottom:.55rem}
+.vt-card{background:var(--warm-white);border:1px solid var(--sand);border-radius:10px;padding:.85rem .8rem;min-height:160px}
+.vt-card strong{display:block;font-family:'DM Serif Display',Georgia,serif;font-size:1.02rem;color:var(--penn-blue);line-height:1.2;margin-bottom:.4rem}
+.vt-card p{font-size:.88rem;line-height:1.55;margin-bottom:0}
+.vt-foot{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.95rem}
+.vt-chip{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid;padding:.28rem .55rem;border-radius:999px;background:var(--warm-white)}
+.vt-chip.blue{color:var(--penn-blue);border-color:rgba(1,31,91,.2)}
+.vt-chip.maroon{color:var(--penn-maroon);border-color:rgba(153,0,0,.2)}
+.vt-chip.coral{color:var(--coral);border-color:rgba(196,69,54,.2)}
+
+/* SIMULATION */
+.sim-box{background:var(--warm-white);border:1px solid var(--sand);border-radius:12px;padding:1.5rem;margin-bottom:.9rem}
+.sim-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky);margin-bottom:1rem}
+.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.1rem}
+.slider-row{display:flex;flex-direction:column;gap:.25rem}
+.s-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky)}
+.s-val{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--penn-blue)}
+input[type=range]{width:100%;accent-color:var(--penn-blue);cursor:pointer}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.9rem}
+.metric-card{background:var(--cream);border:1px solid var(--sand);border-radius:8px;padding:.7rem}
+.metric-val{font-family:'DM Serif Display',Georgia,serif;font-size:1.45rem;color:var(--penn-blue);line-height:1}
+.metric-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky);margin-top:.2rem}
+.good{color:var(--emerald)} .bad{color:var(--coral)} .warn{color:var(--amber)}
+.chart-legend{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:.45rem}
+.legend-item{display:flex;align-items:center;gap:.3rem;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--steel)}
+.l-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+.explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.7rem}
+.explain-panel{border-left:3px solid;border-radius:0 6px 6px 0;padding:.6rem .8rem;background:var(--cream)}
+.explain-panel p{font-size:.84rem;margin-bottom:0;line-height:1.5}
+.explain-panel strong{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:.2rem}
+.preset-row{display:flex;gap:.45rem;margin-bottom:.9rem;flex-wrap:wrap}
+.preset-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid;border-radius:4px;padding:.28rem .6rem;cursor:pointer;background:transparent;transition:all .2s}
+.btn-green{border-color:var(--emerald);color:var(--emerald)} .btn-amber{border-color:var(--amber);color:var(--amber)} .btn-red{border-color:var(--coral);color:var(--coral)}
+.btn-green.active{background:var(--emerald);color:#fff} .btn-amber.active{background:var(--amber);color:#fff} .btn-red.active{background:var(--coral);color:#fff}
+
+/* NAV */
+#nav{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;gap:.5rem;z-index:100}
+.nav-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--penn-blue);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background .2s,opacity .2s}
+.nav-btn:hover{background:var(--penn-maroon)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.nav-btn:disabled:hover{background:var(--penn-blue)}
+
+/* CLOSING */
+.slide-closing{background:var(--penn-blue);display:none;min-height:calc(100vh - 51px);padding:3rem 1.5rem 5rem}
+.slide-closing.active{display:block}
+.slide-closing h2{color:#fff}
+.slide-closing .callout-info{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.3)}
+.slide-closing .callout-info .callout-title{color:rgba(255,255,255,.7)}
+.slide-closing .callout-info p{color:rgba(255,255,255,.85)}
+.slide-closing .callout-success{background:rgba(45,106,79,.2);border-color:var(--emerald)}
+.slide-closing .callout-success .callout-title,.slide-closing .callout-success p{color:rgba(255,255,255,.85)}
+.slide-closing .callout-failure{background:rgba(196,69,54,.2);border-color:var(--coral)}
+.slide-closing .callout-failure .callout-title,.slide-closing .callout-failure p{color:rgba(255,255,255,.85)}
+.slide-closing .pull-quote{border-color:rgba(255,255,255,.2)}
+.slide-closing .pull-quote p{color:rgba(255,255,255,.8)}
+.slide-closing .pull-quote cite{color:rgba(255,255,255,.4)}
+.closing-deco{text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:clamp(4rem,14vw,8rem);color:rgba(255,255,255,.03);pointer-events:none;line-height:1;user-select:none;margin-top:.5rem}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .two-col,.three-col,.pro-con,.stat-grid,.metric-grid,.explain-grid,.slider-grid{grid-template-columns:1fr}
+  .visual-timeline{padding:1rem}
+  .vt-track{display:none}
+  .vt-grid{grid-template-columns:1fr}
+  .vt-item{padding-top:0;padding-left:1.25rem}
+  .vt-item::before{position:absolute;left:0;top:3.1rem;margin:0}
+  .vt-year{text-align:left;padding-left:1.6rem}
+  .vt-card{min-height:auto}
+}
+@media(prefers-reduced-motion:reduce){.slide,#progress-fill{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-brand">Fels Institute of Government</div>
+  <div id="topbar-center">GAFL 6510 &middot; Public &amp; Nonprofit Finance</div>
+  <div id="topbar-counter">Slide <span id="slide-num">1</span> of <span id="slide-total">21</span></div>
+</div>
+<div id="progress"><div id="progress-fill" style="width:4.8%"></div></div>
+
+<div id="slides" role="main">
+
+<!-- ═══ SLIDE 1: TITLE ═══ -->
+<div class="slide slide-title active" id="slide-1">
+  <div class="title-inner">
+    <div class="title-eyebrow">Case Study &middot; Public Finance &middot; GAFL 6510</div>
+    <h1 class="title-h1">The Harrisburg<br>Incinerator Project</h1>
+    <p class="title-sub">A Cautionary Tale in Public Finance</p>
+    <div class="title-meta">
+      <span>Capital Budgeting</span>
+      <span>Debt Management</span>
+      <span>Fiscal Oversight</span>
+      <span>Intergovernmental Finance</span>
+    </div>
+  </div>
+  <div class="title-deco">HARRISBURG</div>
+</div>
+
+<!-- ═══ SLIDE 2: AGENDA ═══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-inner">
+    <h2>What We&#39;re Covering Today</h2>
+    <p class="lead">Harrisburg, Pennsylvania &mdash; a state capital of ~50,000 residents &mdash; nearly went bankrupt over a municipal waste incinerator. The city accumulated over $450 million in debt and was forced into state receivership in 2011. This case dissects every financial misstep and distills lasting lessons for public financial managers.</p>
+    <div class="agenda-list">
+      <div class="agenda-row">
+        <span class="agenda-part">Part 1</span>
+        <span class="agenda-title">The Setup &mdash; A City&#39;s White Elephant (1972&ndash;1999)</span>
+        <span class="agenda-time">20 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-part">Part 2</span>
+        <span class="agenda-title">The Fork in the Road &mdash; The 2003 Decision</span>
+        <span class="agenda-time">20 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-part">Part 3</span>
+        <span class="agenda-title">The Cascade of Failure &mdash; Construction Collapse (2004&ndash;2007)</span>
+        <span class="agenda-time">25 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-part">Part 4</span>
+        <span class="agenda-title">Crisis &amp; Resolution &mdash; Receivership and Escape (2008&ndash;2014)</span>
+        <span class="agenda-time">15 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-part">Part 5</span>
+        <span class="agenda-title">Lessons Learned &mdash; What Public Finance Managers Must Know</span>
+        <span class="agenda-time">10 min</span>
+      </div>
+    </div>
+    <div class="callout callout-warning">
+      <div class="callout-title">Course Connection</div>
+      <p>This case directly illustrates capital budgeting, debt management, fiscal oversight, governance failures, and intergovernmental fiscal relations &mdash; all core themes in public finance. Look for which principle is violated at each decision point.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3: DIVIDER PART 1 ═══ -->
+<div class="slide slide-divider part1" id="slide-3">
+  <div class="divider-inner">
+    <div class="divider-part">Part 1 of 5</div>
+    <div class="divider-title">A City&#39;s White Elephant</div>
+    <div class="divider-sub">How a promising waste-to-energy facility became a money pit before the real crisis even began</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4: THE ORIGINAL INCINERATOR ═══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-inner">
+    <h2>The Original Incinerator: Built for Trouble</h2>
+    <div class="two-col">
+      <div>
+        <p class="lead">Harrisburg&#39;s trash-to-steam incinerator opened in 1972 at a cost of $12.5 million. Designed to burn 500&ndash;720 tons of garbage per day and generate steam and electricity, it suffered mechanical breakdowns from the start and ran financial deficits for years.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="t-year">1972</span>
+            <div class="t-content"><p>Plant opens. Immediate mechanical breakdowns; operates well below capacity. Financial deficits accumulate through the 1970s and early &#39;80s.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">1985</span>
+            <div class="t-content"><p>City must issue a <strong>$25 million bond</strong> just to remove &#34;Mt. Ashmore&#34; &mdash; an 80-foot mountain of accumulated ash. Already $25M in new debt before any upgrades.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">1990s</span>
+            <div class="t-content"><p>Dioxin emissions far exceed new federal Clean Air Act standards. Local leaders privately call it &#34;a facility that far exceeds our needs and ability to pay.&#34;</p></div>
+          </div>
+        </div>
+        <div class="callout callout-failure">
+          <div class="callout-title">Early Warning Ignored</div>
+          <p>By the mid-1980s city leaders knew the incinerator was a money pit. The prudent choice &mdash; decommissioning &mdash; was deferred repeatedly, allowing liabilities to compound before the major crisis.</p>
+        </div>
+      </div>
+      <div>
+        <div class="photo-slot">
+          <img src="images/harrisburg-capital.JPG" alt="Pennsylvania State Capitol building in Harrisburg" style="height:240px;object-fit:cover;border-radius:8px">
+          <p class="photo-caption">Pennsylvania State Capitol, Harrisburg, PA &mdash; a city of ~50,000 residents that would accumulate debt exceeding that of many large cities</p>
+        </div>
+        <div class="def-box">
+          <div class="def-label">Key Concept: White Elephant</div>
+          <p>A &#34;white elephant&#34; is a public asset that costs more to operate and maintain than its value justifies &mdash; impossible to dispose of easily, yet financially burdensome to keep. Harrisburg&#39;s incinerator fit this definition by 1980, fifteen years before the worst decisions were made.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5: THE AUTHORITY GAMBIT ═══ -->
+<div class="slide" id="slide-incinerator-timeline">
+  <div class="slide-inner">
+    <h2>Visual Timeline: How a 1972 Facility Became a 2011 Fiscal Emergency</h2>
+    <p class="lead">The crisis was not a single bad year. It was a long arc of deferred maintenance, hidden liabilities, regulatory pressure, and escalating debt that stretched across four decades.</p>
+    <div class="visual-timeline" aria-label="Timeline of the Harrisburg incinerator project">
+      <div class="vt-track" aria-hidden="true"></div>
+      <div class="vt-grid">
+        <div class="vt-item">
+          <div class="vt-year">1972</div>
+          <div class="vt-card">
+            <strong>Plant Opens</strong>
+            <p>Harrisburg launches a $12.5 million trash-to-steam incinerator that almost immediately experiences mechanical trouble and chronic underperformance.</p>
+          </div>
+        </div>
+        <div class="vt-item">
+          <div class="vt-year">1985</div>
+          <div class="vt-card">
+            <strong>Debt for Ash Removal</strong>
+            <p>The city issues about $25 million in new debt to deal with &#34;Mt. Ashmore,&#34; showing the project is already producing cleanup costs as well as operating losses.</p>
+          </div>
+        </div>
+        <div class="vt-item milestone">
+          <div class="vt-year">1993</div>
+          <div class="vt-card">
+            <strong>Authority Transfer</strong>
+            <p>The incinerator is shifted to The Harrisburg Authority, moving debt off the city&#39;s books on paper while the city still guarantees the obligations in practice.</p>
+          </div>
+        </div>
+        <div class="vt-item milestone">
+          <div class="vt-year">2000</div>
+          <div class="vt-card">
+            <strong>EPA Ultimatum</strong>
+            <p>Federal emissions rules force a choice: close the plant and absorb losses, or borrow heavily to modernize and expand a troubled facility.</p>
+          </div>
+        </div>
+        <div class="vt-item crisis">
+          <div class="vt-year">2003-2007</div>
+          <div class="vt-card">
+            <strong>Retrofit Spiral</strong>
+            <p>Officials choose reconstruction, costs explode, contractors fail, and repeated borrowing turns a legacy problem into a full-scale debt crisis.</p>
+          </div>
+        </div>
+        <div class="vt-item crisis">
+          <div class="vt-year">2011</div>
+          <div class="vt-card">
+            <strong>Receivership</strong>
+            <p>With debt tied to the incinerator overwhelming the city, Harrisburg enters state receivership and loses local control over its financial recovery.</p>
+          </div>
+        </div>
+      </div>
+      <div class="vt-foot">
+        <span class="vt-chip blue">Operational failure</span>
+        <span class="vt-chip maroon">Governance decision</span>
+        <span class="vt-chip coral">Fiscal crisis</span>
+      </div>
+    </div>
+    <div class="callout callout-warning">
+      <div class="callout-title">Teaching Lens</div>
+      <p>This timeline helps students see the core public-finance lesson: the final emergency in 2011 was the cumulative result of many earlier decisions, not a sudden shock.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 6: THE AUTHORITY GAMBIT ═══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-inner">
+    <h2>Off the Books, On the Hook: The Authority Gambit</h2>
+    <p class="lead">In 1993, facing ongoing losses, the city sold the incinerator to <strong>The Harrisburg Authority</strong> &mdash; a separate municipal utility authority &mdash; for about $40 million. This accounting maneuver was meant to insulate the mayor from having to raise taxes. In practice, it changed nothing about the city&#39;s ultimate liability.</p>
+    <div class="two-col">
+      <div>
+        <div class="callout callout-info">
+          <div class="callout-title">The Political Logic</div>
+          <p>Moving debt off the city&#39;s books allowed Mayor Reed to avoid raising trash fees or property taxes, shielding him from political accountability. The Authority was a buffer &mdash; but one with the same mayor&#39;s allies on its board.</p>
+        </div>
+        <div class="callout callout-failure">
+          <div class="callout-title">The Financial Reality</div>
+          <p>The Authority&#39;s board was appointed by Mayor Reed. The sale was financed by the Authority&#39;s own debt (not cash). The city <em>guaranteed</em> the Authority&#39;s bonds &mdash; meaning when repairs cost $10 million in 1996, the city backed the loan. The liability never left; it was just hidden.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">Debt in 2000 (Before Major Retrofit)</div>
+          <p>By 2000, before any major renovation decision, the incinerator had already accumulated approximately <strong>$104 million</strong> in debt &mdash; on a facility originally built for $12.5 million.</p>
+        </div>
+      </div>
+      <div>
+        <div class="def-box">
+          <div class="def-label">Key Concept: Off-Balance-Sheet Risk</div>
+          <p>Municipalities sometimes use special authorities or authorities to move debt off the city&#39;s official balance sheet. But if the city guarantees the debt, it remains a contingent liability. Rating agencies and auditors see through this; crises reveal it.</p>
+        </div>
+        <div class="step-list" style="margin-top:.75rem">
+          <div class="step-card">
+            <div class="step-num n-coral">1</div>
+            <p><strong>City owns incinerator</strong> &mdash; debt appears in city budget, creating political pressure.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num n-amber">2</div>
+            <p><strong>Sell to Authority</strong> &mdash; debt moves off city books. Mayor avoids tax increases.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num n-coral">3</div>
+            <p><strong>City guarantees Authority bonds</strong> &mdash; full liability returns through the back door.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 7: DIVIDER PART 2 ═══ -->
+<div class="slide slide-divider part2" id="slide-6">
+  <div class="divider-inner">
+    <div class="divider-part">Part 2 of 5</div>
+    <div class="divider-title">The Fork in the Road</div>
+    <div class="divider-sub">When the EPA forced a binary choice, officials chose the more expensive option &mdash; and then made it far more expensive than it needed to be</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8: EPA SHUTDOWN ═══ -->
+<div class="slide" id="slide-7">
+  <div class="slide-inner">
+    <h2>EPA Shutdown Order, 2000: Two Paths, One Bad Choice</h2>
+    <p class="lead">In December 2000, the U.S. EPA ordered the Harrisburg incinerator shut down due to toxic dioxin and mercury emissions far above federal standards. The city faced a binary ultimatum: <strong>permanently close</strong> the plant by 2003, or implement a full modernization plan to meet Clean Air Act requirements.</p>
+    <div class="two-col">
+      <div>
+        <div class="callout callout-success">
+          <div class="callout-title">Option A: Permanent Closure</div>
+          <p><strong>What it meant:</strong> Accept the loss. Pay off the ~$104M in existing debt over time. Arrange regional waste disposal with neighboring counties or LCSWMA (Lancaster County Solid Waste Management Authority). No more operating losses; no construction risk.</p>
+          <p style="margin-top:.5rem"><strong>Political obstacle:</strong> Mayor Reed would have to admit the incinerator was a failure &mdash; a major political cost after 28 years in office.</p>
+        </div>
+      </div>
+      <div>
+        <div class="callout callout-failure">
+          <div class="callout-title">Option B: Rebuild and Expand (Chosen)</div>
+          <p><strong>What it meant:</strong> Retrofit the facility with modern pollution controls and expand capacity to 800 tons/day. Credible firms estimated $100&ndash;$180 million for the job. Issue new bonds to cover construction plus the loss of revenue during a 3+ year shutdown.</p>
+          <p style="margin-top:.5rem"><strong>The gamble:</strong> Revenue from the new, larger plant would eventually pay off all debt. Consultants projected $1 billion in revenue over 30 years.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-warning">
+      <div class="callout-title">The Sunk Cost Fallacy at Work</div>
+      <p>Officials argued that closing the plant would leave them with $104M in debt and no asset. True &mdash; but the correct question is not &#34;how do we recover past costs?&#34; but &#34;what is the best path forward given current options?&#34; The sunk cost of $104M was irrelevant to whether a $125M+ retrofit would create net value. A rigorous cost-benefit analysis &mdash; which was never conducted &mdash; might have shown closure was actually cheaper.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Key Concept: Sunk Cost Fallacy</div>
+      <p>In public capital budgeting, a sunk cost is money already spent that cannot be recovered. Rational decisions consider only future costs and benefits. Continuing a failing project to &#34;justify&#34; past spending is the sunk cost fallacy &mdash; one of the most dangerous cognitive errors in public finance.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8: THE 2003 RETROFIT ═══ -->
+<div class="slide" id="slide-8">
+  <div class="slide-inner">
+    <h2>The 2003 Retrofit: How Not to Choose a Contractor</h2>
+    <p class="lead">In 2003, the Harrisburg Authority approved an ambitious plan to rebuild and expand the incinerator. Then came the critical mistake: choosing the cheapest bid from an unqualified firm.</p>
+    <div class="two-col">
+      <div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="t-year">2003</span>
+            <div class="t-content"><p>Bids solicited. Established waste-to-energy firms estimate <strong>$100&ndash;$180M</strong>. Barlow Projects Inc. (Colorado) bids <strong>$57M</strong> &mdash; roughly half the low end. Contract awarded to Barlow.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2003</span>
+            <div class="t-content"><p><strong>$125M in new bonds</strong> issued to fund construction, cover lost revenue during shutdown, and service existing debt. Total incinerator debt rises to ~$225M+.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2003</span>
+            <div class="t-content"><p>Bonds paired with <strong>interest-rate swaps</strong> (derivatives with Royal Bank of Canada) intended to lower costs. <strong>No performance bond</strong> required from Barlow.</p></div>
+          </div>
+        </div>
+        <div class="callout callout-failure">
+          <div class="callout-title">The Lowest-Bid Trap</div>
+          <p>A bid 40&ndash;70% below all competitors is a red flag, not a bargain. For a project of this complexity and scale, it signals the contractor either doesn&#39;t understand the scope, is undercapitalized, or is willing to make unrealistic promises to win the contract.</p>
+        </div>
+      </div>
+      <div>
+        <div class="def-box">
+          <div class="def-label">What Was Missing: Due Diligence Checklist</div>
+          <p>No independent evaluation of Barlow&#39;s <em>technical capacity</em>. No independent evaluation of Barlow&#39;s <em>financial capacity</em>. No <em>performance bond</em> (standard insurance on construction contracts). No independent <em>feasibility study</em> of the project&#39;s financial projections. No serious evaluation of <em>alternatives</em> to the retrofit.</p>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-title">Revenue Projections (2003)</div>
+          <p>Consultants projected the new incinerator would generate <strong>$23M revenue in Year 1</strong>, growing to <strong>$44M by 2034</strong> &mdash; enough to pay off all debt by 2034 if everything went as planned. These projections assumed a third boiler was completed, full waste volumes were secured, and energy prices held.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">Interest Rate Swaps</div>
+          <p>The 2003 bonds were paired with derivatives intended to reduce interest costs. Under the swap agreements, if the Authority couldn&#39;t make payments, the <em>city</em> was obligated to pay. If the city couldn&#39;t, <em>Dauphin County</em> had to pay. These cascading guarantees entangled multiple governments in the Authority&#39;s debts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 9: SIMULATION 1 ═══ -->
+<div class="slide" id="slide-9">
+  <div class="slide-inner">
+    <h2>Simulation 1: Debt Sustainability Analyzer</h2>
+    <p class="lead">Adjust the sliders to see how debt service compares to projected revenue and city budget capacity. This is the analysis Harrisburg <em>should have done</em> before issuing $125M in bonds in 2003.</p>
+
+    <div class="sim-box">
+      <div class="sim-title">Simulation 1 &mdash; Is the Debt Sustainable?</div>
+
+      <div class="preset-row">
+        <button class="preset-btn btn-green active" data-s1="plan2003" onclick="setScenario1('plan2003')">2003 Plan (Official)</button>
+        <button class="preset-btn btn-amber" data-s1="crisis2007" onclick="setScenario1('crisis2007')">2007 Crisis Point</button>
+        <button class="preset-btn btn-red" data-s1="actual2010" onclick="setScenario1('actual2010')">2010 Actual</button>
+      </div>
+
+      <div class="slider-grid">
+        <div class="slider-row">
+          <span class="s-label">Total Incinerator Debt ($M)</span>
+          <span class="s-val" id="s1-debt-val">$225M</span>
+          <input type="range" id="s1-debt" min="50" max="500" step="5" value="225" aria-label="Total incinerator debt" oninput="updateSim1()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">City Annual Budget ($M)</span>
+          <span class="s-val" id="s1-budget-val">$60M</span>
+          <input type="range" id="s1-budget" min="30" max="120" step="5" value="60" aria-label="City annual budget" oninput="updateSim1()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">Bond Interest Rate (%)</span>
+          <span class="s-val" id="s1-rate-val">5.0%</span>
+          <input type="range" id="s1-rate" min="3" max="10" step="0.25" value="5" aria-label="Bond interest rate" oninput="updateSim1()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">Year-1 Incinerator Revenue ($M)</span>
+          <span class="s-val" id="s1-rev-val">$23M</span>
+          <input type="range" id="s1-rev" min="5" max="50" step="1" value="23" aria-label="Year 1 incinerator revenue" oninput="updateSim1()">
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-val" id="s1-metric-ads">—</div>
+          <div class="metric-label">Annual Debt Service</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="s1-metric-ratio">—</div>
+          <div class="metric-label">Debt Service / City Budget</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="s1-metric-coverage">—</div>
+          <div class="metric-label">Revenue Coverage (Yr 1)</div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <div class="legend-item"><div class="l-swatch" style="background:#c44536"></div>Annual Debt Service</div>
+        <div class="legend-item"><div class="l-swatch" style="background:rgba(45,106,79,.65)"></div>Projected Revenue (5% annual growth)</div>
+        <div class="legend-item"><div class="l-swatch" style="background:none;border:2px dashed #778da9;width:20px;height:2px;border-radius:0"></div>City Annual Budget</div>
+      </div>
+      <canvas id="chart1" height="200"></canvas>
+
+      <div class="explain-grid">
+        <div class="explain-panel" style="border-color:var(--coral)">
+          <strong style="color:var(--coral)">Debt Service Bar</strong>
+          <p>Annual payment required on $X of bonds at Y% over 20 years. This is a fixed obligation &mdash; it must be paid regardless of incinerator revenue.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--emerald)">
+          <strong style="color:var(--emerald)">Revenue Bar</strong>
+          <p>Projected incinerator income (tipping fees + energy sales) growing 5% annually. When this bar is shorter than the debt service bar, the gap must be filled from the city&#39;s general fund.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--sky)">
+          <strong style="color:var(--sky)">Budget Reference Line</strong>
+          <p>Harrisburg&#39;s entire annual operating budget. If debt service approaches this line, basic city services &mdash; police, fire, roads &mdash; are at risk.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--amber)">
+          <strong style="color:var(--amber)">Try This</strong>
+          <p>Switch to &#34;2010 Actual&#34; to see the scenario where debt service exceeded the city&#39;s entire budget. That is what insolvency looks like.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10: DIVIDER PART 3 ═══ -->
+<div class="slide slide-divider part3" id="slide-10">
+  <div class="divider-inner">
+    <div class="divider-part">Part 3 of 5</div>
+    <div class="divider-title">The Cascade of Failure</div>
+    <div class="divider-sub">Every decision point was an opportunity to cut losses &mdash; at each one, officials doubled down instead</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11: CONSTRUCTION COLLAPSE ═══ -->
+<div class="slide" id="slide-11">
+  <div class="slide-inner">
+    <h2>Construction Collapse: The Barlow Disaster (2004&ndash;2007)</h2>
+    <p class="lead">Almost immediately after the 2003 contracts were signed, the cascade of failure began. Barlow Projects proved exactly what a $57M bid on a $100&ndash;180M job should have suggested: the firm was undercapitalized and incapable of delivering.</p>
+    <div class="two-col">
+      <div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="t-year">2003</span>
+            <div class="t-content"><p>Before construction begins, Barlow revises cost upward to <strong>$77M</strong>. Red flag ignored.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2004</span>
+            <div class="t-content"><p>Barlow cannot obtain a <strong>performance bond</strong> &mdash; too small to be bondable for a project this size. Instead of canceling, Harrisburg uses payment holdbacks and penalty clauses as substitute protection.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2005</span>
+            <div class="t-content"><p>Key subcontractor falls <strong>six months behind</strong> on boiler fabrication. Construction timeline collapses. Bond funds meant to cover interest during construction are running out.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2005</span>
+            <div class="t-content"><p>Harrisburg faces a dilemma: enforce penalties (Barlow goes bankrupt, incomplete facility) or <strong>keep paying</strong>. Officials choose to pour good money after bad &mdash; forgiving penalties and advancing funds.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2006</span>
+            <div class="t-content"><p>Barlow files for bankruptcy and abandons the project. The promised <strong>third boiler is never built</strong> &mdash; its parts were cannibalized. Covanta Energy brought in under emergency conditions to salvage the facility.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2007</span>
+            <div class="t-content"><p>Another <strong>$60M bond issue</strong> to fund the emergency salvage. Harrisburg sues Barlow for $70M &mdash; symbolic, since the bankrupt firm cannot pay.</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout callout-failure">
+          <div class="callout-title">The Forensic Audit Finding (2012)</div>
+          <p>&#34;All parties proceeded with the Barlow retrofit project in 2003 without adequate security in place to ensure Barlow&#39;s performance.&#34; No performance bond. No independent evaluation of Barlow&#39;s financial or technical capacity. A Pennsylvania Senate committee later remarked that Harrisburg <em>&#34;bet the city&#34;</em> on an unvetted contractor with unproven technology.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">Conflicts of Interest</div>
+          <p>Reynolds Construction Management &mdash; a firm with a board member who also sat on the Harrisburg Authority&#39;s board &mdash; was awarded contracts without competitive bidding. The conflict was flagged by the Authority&#39;s solicitor. No corrective action was taken.</p>
+        </div>
+        <div class="callout callout-info">
+          <div class="callout-title">Covanta&#39;s Assessment (Late 2006)</div>
+          <p>When Covanta Energy arrived to salvage the facility, they found: &#34;streams of water flowed through the facility, amidst piles of ash; the all-important third boiler had been completely scavenged.&#34; The incinerator was finally restarted in mid-2008 &mdash; with only two boilers, at lower capacity than planned.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12: THE DEBT SPIRAL ═══ -->
+<div class="slide" id="slide-12">
+  <div class="slide-inner">
+    <h2>The Debt Spiral: Numbers That Defy Belief</h2>
+    <div class="two-col">
+      <div>
+        <p class="lead">By 2007, after Barlow&#39;s failure and the emergency $60M bond issue, Harrisburg&#39;s incinerator-related debt had exploded to $288&ndash;$310 million &mdash; nearly five times the city&#39;s annual budget, for a city of 50,000 people.</p>
+        <div class="stat-grid">
+          <div class="stat-card sc-coral">
+            <div class="stat-val">$310M</div>
+            <div class="stat-label">Incinerator Debt by 2007</div>
+          </div>
+          <div class="stat-card sc-blue">
+            <div class="stat-val">$60M</div>
+            <div class="stat-label">City&#39;s Entire Annual Budget</div>
+          </div>
+          <div class="stat-card sc-coral">
+            <div class="stat-val">$68M</div>
+            <div class="stat-label">Annual Debt Service in 2010</div>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p>&#34;The incinerator fiasco reflects the accumulated effects of bad decisions on critical project issues, ranging from contractor selection at the outset to the $60 million in debt taken on in 2007 when the facility was still incomplete.&#34;</p>
+          <cite>Harrisburg Authority Forensic Audit, January 2012</cite>
+        </div>
+        <div class="callout callout-failure">
+          <div class="callout-title">The Per Capita Comparison</div>
+          <p>By 2011, Harrisburg&#39;s debt per capita was <strong>three times higher than Philadelphia&#39;s</strong> &mdash; Pennsylvania&#39;s largest city. A city of 50,000 had taken on infrastructure debt appropriate for a major metropolitan area.</p>
+        </div>
+      </div>
+      <div>
+        <div class="photo-slot">
+          <img src="images/WSJ-incinerator.jpg" alt="Harrisburg incinerator facility tipping floor" style="height:260px;object-fit:cover;border-radius:8px">
+          <p class="photo-caption">The Harrisburg incinerator&#39;s tipping floor, where garbage is delivered and fed into the furnaces. The facility was expected to generate $23M+ annually. It never came close.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">How Debt Management Principles Were Violated</div>
+          <p><strong>Affordability:</strong> Debt service exceeded the entire city budget &mdash; the clearest possible violation of debt capacity limits. <strong>Transparency:</strong> Much of this debt was carried by the Authority, obscuring the city&#39;s true exposure. <strong>Risk management:</strong> No contingency funds; no performance bond; cascading guarantees across three governments. <strong>Plain instruments:</strong> Interest rate swaps added complexity and risk officials did not understand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13: SIMULATION 2 ═══ -->
+<div class="slide" id="slide-13">
+  <div class="slide-inner">
+    <h2>Simulation 2: Revenue vs. Debt Service Gap</h2>
+    <p class="lead">The 2003 plan assumed rapid revenue growth would eventually cover all debt service. Explore how different assumptions change the picture &mdash; and see why the official projections were dangerously optimistic.</p>
+
+    <div class="sim-box">
+      <div class="sim-title">Simulation 2 &mdash; Will Revenue Ever Cover the Debt?</div>
+
+      <div class="preset-row">
+        <button class="preset-btn btn-green active" data-s2="plan2003" onclick="setScenario2('plan2003')">2003 Official Plan</button>
+        <button class="preset-btn btn-amber" data-s2="realistic" onclick="setScenario2('realistic')">Realistic Scenario</button>
+        <button class="preset-btn btn-red" data-s2="actual" onclick="setScenario2('actual')">What Actually Happened</button>
+      </div>
+
+      <div class="slider-grid">
+        <div class="slider-row">
+          <span class="s-label">Annual Debt Service ($M)</span>
+          <span class="s-val" id="s2-ds-val">$34M</span>
+          <input type="range" id="s2-ds" min="20" max="80" step="2" value="34" aria-label="Annual debt service" oninput="updateSim2()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">Projected Year-1 Revenue ($M)</span>
+          <span class="s-val" id="s2-rev-val">$23M</span>
+          <input type="range" id="s2-rev" min="5" max="50" step="1" value="23" aria-label="Projected year 1 revenue" oninput="updateSim2()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">Projected Annual Growth (%)</span>
+          <span class="s-val" id="s2-growth-val">8.0%</span>
+          <input type="range" id="s2-growth" min="1" max="15" step="0.5" value="8" aria-label="Projected annual revenue growth" oninput="updateSim2()">
+        </div>
+        <div class="slider-row">
+          <span class="s-label">Actual Revenue as % of Projected</span>
+          <span class="s-val" id="s2-actual-val">100%</span>
+          <input type="range" id="s2-actual" min="10" max="100" step="5" value="100" aria-label="Actual revenue as percent of projected" oninput="updateSim2()">
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-val" id="s2-metric-coverage">—</div>
+          <div class="metric-label">Year-1 Coverage Ratio</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="s2-metric-shortfall">—</div>
+          <div class="metric-label">Cumulative 15-Yr Shortfall</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="s2-metric-breakeven">—</div>
+          <div class="metric-label">Break-Even Year</div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <div class="legend-item"><div class="l-swatch" style="background:rgba(119,141,169,.45)"></div>Projected Revenue</div>
+        <div class="legend-item"><div class="l-swatch" style="background:rgba(45,106,79,.65)"></div>Actual Revenue</div>
+        <div class="legend-item"><div class="l-swatch" style="background:rgba(196,69,54,.6)"></div>Uncovered Shortfall</div>
+        <div class="legend-item"><div class="l-swatch" style="background:none;border:2px solid #c44536;width:20px;height:2px;border-radius:0"></div>Annual Debt Service</div>
+      </div>
+      <canvas id="chart2" height="210"></canvas>
+
+      <div class="explain-grid">
+        <div class="explain-panel" style="border-color:var(--sky)">
+          <strong style="color:var(--sky)">Projected Revenue (Gray)</strong>
+          <p>What consultants promised: Year-1 revenue growing at the projected rate. This was the basis for issuing $125M in bonds in 2003.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--emerald)">
+          <strong style="color:var(--emerald)">Actual Revenue (Green)</strong>
+          <p>Revenue scaled by the &#34;actual as % of projected&#34; slider. Reflects underperformance due to the third boiler never being completed.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--coral)">
+          <strong style="color:var(--coral)">Shortfall (Red)</strong>
+          <p>The gap between debt service and actual revenue in each year. This gap must be covered by the city&#39;s general fund &mdash; or it becomes a default.</p>
+        </div>
+        <div class="explain-panel" style="border-color:var(--amber)">
+          <strong style="color:var(--amber)">Try: What Actually Happened</strong>
+          <p>Click &#34;What Actually Happened&#34; above: $34M debt service, $15M revenue, only 25% of projections realized. The shortfall never closes over 15 years.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14: DIVIDER PART 4 ═══ -->
+<div class="slide slide-divider part4" id="slide-14">
+  <div class="divider-inner">
+    <div class="divider-part">Part 4 of 5</div>
+    <div class="divider-title">Crisis, Receivership &amp; Resolution</div>
+    <div class="divider-sub">How Pennsylvania stepped in to prevent bankruptcy &mdash; and what Harrisburg had to give up to escape</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 15: INSOLVENCY ═══ -->
+<div class="slide" id="slide-15">
+  <div class="slide-inner">
+    <h2>Insolvency Arrives: 2008&ndash;2011</h2>
+    <p class="lead">Once the incinerator restarted in mid-2008 with only two operational boilers, the math was irretrievable. Revenue fell far short of debt service. Payments were missed. Other governments were dragged in. Default arrived.</p>
+    <div class="two-col">
+      <div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="t-year">2008</span>
+            <div class="t-content"><p>Incinerator restarted. Only 2 boilers operational (third never built). Revenue far below 2003 projections; debt service requires $34&ndash;68M per year.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2009</span>
+            <div class="t-content"><p>Dauphin County &mdash; which co-guaranteed the interest-rate swaps &mdash; pays <strong>$775,000</strong> that Harrisburg cannot cover. County sues the city to recover the payment.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2010</span>
+            <div class="t-content"><p>Bond insurer Assured Guaranty steps in to cover a <strong>$425,000 default</strong>. Harrisburg&#39;s annual debt service reaches <strong>$68M &mdash; greater than the city&#39;s entire operating budget</strong>.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2010</span>
+            <div class="t-content"><p>City halts general fund contributions to incinerator debt. Officials argue paying would compromise basic services. Credit agencies downgrade the city.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">Oct 2011</span>
+            <div class="t-content"><p>City Council votes to file for <strong>Chapter 9 bankruptcy</strong>. Total debt and claims exceed <strong>$450 million</strong>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout callout-failure">
+          <div class="callout-title">The Interest Rate Swap Cascade</div>
+          <p>When Harrisburg couldn&#39;t make swap payments to Royal Bank of Canada, the obligation flowed upward: Authority &rarr; City &rarr; Dauphin County. Instruments that were sold as cost-savers became a mechanism for spreading municipal insolvency across multiple governments. Pennsylvania&#39;s Auditor General later condemned such swaps as &#34;lining pockets on Wall Street&#34; at taxpayer expense.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">Mayor Reed&#39;s Departure (2010)</div>
+          <p>Mayor Stephen Reed left office in January 2010 after 28 years &mdash; just as the full scale of the debt became undeniable. The city council, which had approved every bond guarantee nearly unanimously, now claimed they &#34;didn&#39;t fully understand&#34; the deals they had approved. New mayor Linda Thompson and the council could not agree on solutions.</p>
+        </div>
+        <div class="def-box">
+          <div class="def-label">Chapter 9 Municipal Bankruptcy</div>
+          <p>Chapter 9 of the U.S. Bankruptcy Code allows municipalities to restructure debts while continuing to provide essential services. Unlike corporate bankruptcy, a city cannot be liquidated. The state of Pennsylvania moved to prevent Harrisburg from using this option.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16: STATE TAKEOVER ═══ -->
+<div class="slide" id="slide-16">
+  <div class="slide-inner">
+    <h2>State Takeover and the Path Out: 2011&ndash;2014</h2>
+    <p class="lead">Pennsylvania blocked Harrisburg&#39;s bankruptcy filing, installed a state receiver, and engineered a resolution through forced asset sales. The city escaped insolvency &mdash; but paid a steep price.</p>
+    <div class="two-col">
+      <div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="t-year">Late 2011</span>
+            <div class="t-content"><p>Pennsylvania Legislature passes a law <strong>barring Harrisburg from declaring bankruptcy</strong>. City declared financially distressed under Act 47. State-appointed Receiver installed to control city finances.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">Jan 2012</span>
+            <div class="t-content"><p>133-page <strong>forensic audit</strong> released. Documents conflicts of interest, absent due diligence, unsecured contractor agreements, and the full chain of financial missteps.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">Late 2013</span>
+            <div class="t-content"><p>Recovery plan implemented: Incinerator sold to <strong>Lancaster County Solid Waste Management Authority (LCSWMA) for ~$130M</strong>. Parking garages leased to private concessionaire for <strong>$200M+</strong>.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">March 2014</span>
+            <div class="t-content"><p>Receivership ends. Harrisburg avoids formal bankruptcy &mdash; but must operate under a strict long-term recovery plan. Credit reputation tarnished for years.</p></div>
+          </div>
+          <div class="timeline-item">
+            <span class="t-year">2015&ndash;2020</span>
+            <div class="t-content"><p>Former Mayor Reed indicted (unrelated charges &mdash; theft of artifact-purchase funds). No criminal charges filed for the incinerator deals specifically. 2018 civil lawsuit filed against engineers, bond lawyers, underwriters, and financial advisors who allegedly &#34;profited handsomely while misleading officials.&#34;</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout callout-info">
+          <div class="callout-title">Why Pennsylvania Blocked Bankruptcy</div>
+          <p>State officials worried that a state-capital bankruptcy would: (1) damage Pennsylvania&#39;s reputation in bond markets; (2) shift costs to suburban commuters and county taxpayers; and (3) set a dangerous precedent. The desire to protect the municipal bond market drove the state&#39;s decision to prioritize creditor repayment over the city&#39;s clean break.</p>
+        </div>
+        <div class="callout callout-warning">
+          <div class="callout-title">What Harrisburg Lost</div>
+          <p>To pay off the incinerator debt, the city had to sell its waste-to-energy facility (now running profitably &mdash; for Lancaster County, not Harrisburg) and give up decades of future parking revenue. Residents faced higher trash fees and taxes under the recovery plan. The citizens who had no voice in the original decisions bore the full cost.</p>
+        </div>
+        <div class="callout callout-success">
+          <div class="callout-title">The Irony: It Works Now</div>
+          <p>The Harrisburg incinerator, now operated by LCSWMA, is a functional and financially sustainable asset &mdash; serving the region&#39;s waste management needs just as originally envisioned. Harrisburg built it; Lancaster County benefits from it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 17: DIVIDER PART 5 ═══ -->
+<div class="slide slide-divider part5" id="slide-17">
+  <div class="divider-inner">
+    <div class="divider-part">Part 5 of 5</div>
+    <div class="divider-title">Lessons for Public Financial Managers</div>
+    <div class="divider-sub">Six failures that public finance professionals must never repeat</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 18: SIX FAILURES ═══ -->
+<div class="slide" id="slide-18">
+  <div class="slide-inner">
+    <h2>Six Critical Failures: What Went Wrong and Why</h2>
+    <p class="lead">The Harrisburg incinerator crisis was not caused by a single decision. It was the product of six distinct, compounding failures &mdash; each of which could have been caught by standard public financial management practices.</p>
+    <div class="pro-con">
+      <div class="con-panel">
+        <div class="panel-title">What Harrisburg Did</div>
+        <ul>
+          <li>&#10005; No independent feasibility study before the 2003 retrofit</li>
+          <li>&#10005; Used consultant projections ($1B over 30 years) without stress-testing</li>
+          <li>&#10005; Chose the lowest contractor bid with no vetting of capacity</li>
+          <li>&#10005; Required no performance bond from Barlow</li>
+          <li>&#10005; Issued interest rate swaps that officials did not understand</li>
+          <li>&#10005; Concentrated decision-making in one long-serving mayor; board rubber-stamped</li>
+          <li>&#10005; Treated refinancing as a solution to a structural problem</li>
+          <li>&#10005; Allowed conflicts of interest to go unaddressed on the Authority board</li>
+        </ul>
+      </div>
+      <div class="pro-panel">
+        <div class="panel-title">What Should Have Happened</div>
+        <ul>
+          <li>&#10003; Require independent feasibility study before any capital commitment</li>
+          <li>&#10003; Stress-test revenue projections at 50%, 75%, and 100% of forecast</li>
+          <li>&#10003; Vet contractors&#39; technical AND financial capacity, not just price</li>
+          <li>&#10003; Require performance bonds on all major construction contracts</li>
+          <li>&#10003; Avoid complex instruments if officials cannot explain the worst-case exposure</li>
+          <li>&#10003; Ensure independent oversight: separate board members, public hearings</li>
+          <li>&#10003; Set debt service limits as % of budget and enforce them</li>
+          <li>&#10003; Enforce conflict-of-interest recusal policies strictly</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pull-quote">
+      <p>&#34;Everyone knew the incinerator was costing a fortune, but no one had done the math on all the debt deals.&#34;</p>
+      <cite>Harrisburg City Council Member, quoted in post-crisis investigation</cite>
+    </div>
+    <div class="callout callout-warning">
+      <div class="callout-title">The Groupthink Problem</div>
+      <p>The forensic audit found that professional advisors &mdash; engineers, attorneys, financial consultants &mdash; all had close ties to Mayor Reed&#39;s office. Each new bond issuance generated fees for these advisors. Bad news was not welcomed. Critical professional skepticism was sidelined. This is a governance failure, not just a financial one: when the people paid to challenge assumptions have incentives to encourage more borrowing, the system fails.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19: BEST PRACTICES ═══ -->
+<div class="slide" id="slide-19">
+  <div class="slide-inner">
+    <h2>Best Practices Checklist for Public Financial Managers</h2>
+    <p class="lead">These six practices, drawn directly from what Harrisburg lacked, represent core standards of public financial management. They apply to any major capital project or debt issuance.</p>
+    <div class="step-list">
+      <div class="step-card">
+        <div class="step-num n-amber">1</div>
+        <div>
+          <h3>Conduct Independent Feasibility Analysis</h3>
+          <p>Before any major capital commitment, commission an independent feasibility study. The analyst must have no financial stake in the project proceeding. Evaluate alternatives seriously &mdash; including the alternative of <em>not</em> proceeding.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num n-amber">2</div>
+        <div>
+          <h3>Use Conservative Revenue Forecasts</h3>
+          <p>Test revenue projections under pessimistic scenarios (50&ndash;75% of base case). If the project only works under best-case assumptions, it is too risky for public funds. Incorporate debt service reserve funds to buffer shortfalls.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num n-amber">3</div>
+        <div>
+          <h3>Maintain Prudent Debt Limits</h3>
+          <p>Track debt service as a share of operating revenues and total budget. Standard benchmarks: debt service below 15&ndash;20% of revenues is generally healthy; above 30% raises serious concerns. Per capita debt should be comparable to peer governments. If a project would breach these limits, it is unaffordable.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num n-amber">4</div>
+        <div>
+          <h3>Require Performance Bonds and Vet Contractors</h3>
+          <p>Performance bonds are standard on public construction projects for good reason: they guarantee project completion if the contractor fails. If a contractor cannot obtain a performance bond, that is disqualifying, not a technicality to work around. Low bids that are far below all competitors warrant special scrutiny, not celebration.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num n-amber">5</div>
+        <div>
+          <h3>Avoid Complex Instruments Unless Fully Understood</h3>
+          <p>Interest rate swaps, capitalized interest bonds, and other derivatives can be appropriate tools &mdash; but only when officials can articulate the worst-case exposure and have stress-tested those scenarios. &#34;Our financial advisor recommended it&#34; is not sufficient due diligence. If you cannot explain the downside, do not sign.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num n-amber">6</div>
+        <div>
+          <h3>Ensure Independent Oversight and Transparency</h3>
+          <p>Require competitive bidding for contractors and financial advisors. Enforce conflict-of-interest recusal policies. Appoint independent (non-mayoral-ally) members to authority boards. Communicate financial risks clearly and publicly. A culture where bad news is welcomed &mdash; not suppressed &mdash; is the single most important governance safeguard.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20: CLOSING ═══ -->
+<div class="slide slide-closing" id="slide-20">
+  <div class="slide-inner">
+    <h2>The Bottom Line</h2>
+    <p class="lead" style="color:rgba(255,255,255,.75)">Harrisburg&#39;s incinerator crisis was not inevitable. At multiple points &mdash; 1985, 1993, 2000, 2003, 2005 &mdash; officials had an opportunity to change course. Standard financial management practices, applied at any of those moments, could have prevented the disaster.</p>
+
+    <div class="two-col" style="margin-bottom:.9rem">
+      <div class="callout callout-failure">
+        <div class="callout-title">What Caused the Crisis</div>
+        <p>Sunk cost reasoning drove a $225M commitment on top of $104M already lost. No independent feasibility study. Lowest bid selected from an unvetted, undercapitalized firm. No performance bond. Interest rate swaps that officials didn&#39;t understand. Concentrated power and zero independent oversight. Consultants with financial incentives to encourage more debt.</p>
+      </div>
+      <div class="callout callout-success">
+        <div class="callout-title">What Could Have Prevented It</div>
+        <p>An independent feasibility study in 2003 that evaluated closure as a serious option. Conservative revenue forecasts that revealed the project was only viable in the best case. A performance bond requirement that would have disqualified Barlow. A debt-to-budget limit that would have flagged the 2007 bond issuance as unaffordable.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">The Broader Lesson</div>
+      <p>The Harrisburg case illustrates what happens when political urgency overrides financial logic, when institutional checks fail, and when officials treat complex capital markets as a mechanism to defer accountability. The principles of public financial management &mdash; rigorous analysis, conservative assumptions, prudent debt management, independent oversight, transparent communication &mdash; are not bureaucratic formalities. They are the guardrails that protect cities and their residents from catastrophic loss.</p>
+    </div>
+
+    <div class="pull-quote">
+      <p>&#34;It&#39;s better to cancel a project than to push forward and jeopardize the entire city&#39;s finances.&#34;</p>
+      <cite>Conclusion of the Harrisburg Authority Forensic Audit (2012)</cite>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">Discussion Questions</div>
+      <p>1. At which decision point could Harrisburg most realistically have changed course? What would have been needed? &nbsp; 2. Who bears responsibility &mdash; Mayor Reed, the City Council, the state, the financial advisors, or all of them? &nbsp; 3. Pennsylvania blocked bankruptcy and prioritized creditor repayment. Was that the right call? &nbsp; 4. How would you design oversight mechanisms to prevent this type of crisis in another city?</p>
+    </div>
+
+    <div class="closing-deco">END</div>
+  </div>
+</div>
+
+</div><!-- /slides -->
+
+<!-- NAV BUTTONS -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)" aria-label="Previous slide" disabled>&#8592;</button>
+  <button class="nav-btn" id="btn-next" onclick="changeSlide(1)" aria-label="Next slide">&#8594;</button>
+</div>
+
+<script>
+var currentSlide = 1;
+var slideEls = Array.prototype.slice.call(document.querySelectorAll('#slides > .slide'));
+var TOTAL = slideEls.length;
+var chart1 = null;
+var chart2 = null;
+
+function fmt(n) {
+  var abs = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (abs >= 1) return sign + '$' + abs.toFixed(1) + 'M';
+  return sign + '$' + Math.round(abs * 1000) + 'k';
+}
+
+function showSlide(n) {
+  if (n < 1 || n > TOTAL) return;
+  slideEls[currentSlide - 1].classList.remove('active');
+  currentSlide = n;
+  var el = slideEls[currentSlide - 1];
+  el.classList.add('active');
+  document.getElementById('slide-num').textContent = currentSlide;
+  document.getElementById('slide-total').textContent = TOTAL;
+  document.getElementById('progress-fill').style.width = ((currentSlide / TOTAL) * 100) + '%';
+  document.getElementById('btn-prev').disabled = currentSlide === 1;
+  document.getElementById('btn-next').disabled = currentSlide === TOTAL;
+  el.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function changeSlide(dir) { showSlide(currentSlide + dir); }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+});
+
+/* ─── SIMULATION 1 ─── */
+function setScenario1(name) {
+  document.querySelectorAll('[data-s1]').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('[data-s1="' + name + '"]').classList.add('active');
+  var s = { plan2003:{debt:225,budget:60,rate:5,rev:23}, crisis2007:{debt:310,budget:60,rate:6,rev:15}, actual2010:{debt:450,budget:60,rate:7,rev:8} };
+  var v = s[name];
+  document.getElementById('s1-debt').value = v.debt;
+  document.getElementById('s1-budget').value = v.budget;
+  document.getElementById('s1-rate').value = v.rate;
+  document.getElementById('s1-rev').value = v.rev;
+  updateSim1();
+}
+
+function updateSim1() {
+  var D = parseFloat(document.getElementById('s1-debt').value);
+  var B = parseFloat(document.getElementById('s1-budget').value);
+  var r = parseFloat(document.getElementById('s1-rate').value) / 100;
+  var R = parseFloat(document.getElementById('s1-rev').value);
+  var g = 0.05;
+
+  document.getElementById('s1-debt-val').textContent = '$' + D.toFixed(0) + 'M';
+  document.getElementById('s1-budget-val').textContent = '$' + B.toFixed(0) + 'M';
+  document.getElementById('s1-rate-val').textContent = parseFloat(document.getElementById('s1-rate').value).toFixed(1) + '%';
+  document.getElementById('s1-rev-val').textContent = '$' + R.toFixed(0) + 'M';
+
+  var n = 20;
+  var ADS = D * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  var coverage = R / ADS;
+  var debtRatio = (ADS / B) * 100;
+
+  var adsEl = document.getElementById('s1-metric-ads');
+  adsEl.textContent = fmt(ADS);
+  adsEl.className = 'metric-val ' + (ADS > B ? 'bad' : ADS > B * 0.3 ? 'warn' : 'good');
+
+  var ratioEl = document.getElementById('s1-metric-ratio');
+  ratioEl.textContent = debtRatio.toFixed(0) + '%';
+  ratioEl.className = 'metric-val ' + (debtRatio > 60 ? 'bad' : debtRatio > 25 ? 'warn' : 'good');
+
+  var covEl = document.getElementById('s1-metric-coverage');
+  covEl.textContent = coverage.toFixed(2) + 'x';
+  covEl.className = 'metric-val ' + (coverage >= 1.2 ? 'good' : coverage >= 0.7 ? 'warn' : 'bad');
+
+  var labels = [], adsData = [], revData = [], budgetData = [];
+  for (var i = 1; i <= 10; i++) {
+    labels.push('Yr ' + i);
+    adsData.push(parseFloat(ADS.toFixed(2)));
+    revData.push(parseFloat((R * Math.pow(1 + g, i - 1)).toFixed(2)));
+    budgetData.push(parseFloat(B.toFixed(2)));
+  }
+
+  var ctx = document.getElementById('chart1').getContext('2d');
+  if (chart1) { chart1.destroy(); }
+  chart1 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Annual Debt Service', data: adsData, backgroundColor: 'rgba(196,69,54,.75)', borderColor: '#c44536', borderWidth: 1, order: 2 },
+        { label: 'Projected Revenue', data: revData, backgroundColor: 'rgba(45,106,79,.65)', borderColor: '#2d6a4f', borderWidth: 1, order: 2 },
+        { label: 'City Annual Budget', data: budgetData, type: 'line', borderColor: '#778da9', borderWidth: 2, borderDash: [6,4], pointRadius: 0, fill: false, order: 1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + fmt(c.raw); } } } },
+      scales: {
+        y: { title: { display: true, text: '$ Millions', font: { family: 'IBM Plex Mono', size: 10 } }, ticks: { callback: function(v) { return '$' + v + 'M'; }, font: { family: 'IBM Plex Mono', size: 10 } } },
+        x: { ticks: { font: { family: 'IBM Plex Mono', size: 10 } } }
+      }
+    }
+  });
+}
+
+/* ─── SIMULATION 2 ─── */
+function setScenario2(name) {
+  document.querySelectorAll('[data-s2]').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('[data-s2="' + name + '"]').classList.add('active');
+  var s = { plan2003:{ds:34,rev:23,growth:8,actual:100}, realistic:{ds:34,rev:23,growth:4,actual:60}, actual:{ds:34,rev:15,growth:2,actual:25} };
+  var v = s[name];
+  document.getElementById('s2-ds').value = v.ds;
+  document.getElementById('s2-rev').value = v.rev;
+  document.getElementById('s2-growth').value = v.growth;
+  document.getElementById('s2-actual').value = v.actual;
+  updateSim2();
+}
+
+function updateSim2() {
+  var DS = parseFloat(document.getElementById('s2-ds').value);
+  var P  = parseFloat(document.getElementById('s2-rev').value);
+  var g  = parseFloat(document.getElementById('s2-growth').value) / 100;
+  var A  = parseFloat(document.getElementById('s2-actual').value) / 100;
+
+  document.getElementById('s2-ds-val').textContent = '$' + DS.toFixed(0) + 'M';
+  document.getElementById('s2-rev-val').textContent = '$' + P.toFixed(0) + 'M';
+  document.getElementById('s2-growth-val').textContent = parseFloat(document.getElementById('s2-growth').value).toFixed(1) + '%';
+  document.getElementById('s2-actual-val').textContent = parseFloat(document.getElementById('s2-actual').value).toFixed(0) + '%';
+
+  var labels = [], projData = [], actualData = [], shortfallData = [], dsLine = [];
+  var cumShortfall = 0, breakEven = -1;
+
+  for (var i = 1; i <= 15; i++) {
+    labels.push('Yr ' + i);
+    var proj   = P * Math.pow(1 + g, i - 1);
+    var actual = proj * A;
+    var shortfall = Math.max(0, DS - actual);
+    cumShortfall += shortfall;
+    if (breakEven < 0 && actual >= DS) { breakEven = i; }
+    projData.push(parseFloat(proj.toFixed(2)));
+    actualData.push(parseFloat(actual.toFixed(2)));
+    shortfallData.push(parseFloat(shortfall.toFixed(2)));
+    dsLine.push(parseFloat(DS.toFixed(2)));
+  }
+
+  var yr1cov = (P * A) / DS;
+  var covEl = document.getElementById('s2-metric-coverage');
+  covEl.textContent = yr1cov.toFixed(2) + 'x';
+  covEl.className = 'metric-val ' + (yr1cov >= 1 ? 'good' : yr1cov >= 0.6 ? 'warn' : 'bad');
+
+  var sfEl = document.getElementById('s2-metric-shortfall');
+  sfEl.textContent = fmt(cumShortfall);
+  sfEl.className = 'metric-val ' + (cumShortfall < 0.5 ? 'good' : cumShortfall < 50 ? 'warn' : 'bad');
+
+  var beEl = document.getElementById('s2-metric-breakeven');
+  beEl.textContent = breakEven > 0 ? 'Year ' + breakEven : 'Never';
+  beEl.className = 'metric-val ' + (breakEven > 0 && breakEven <= 5 ? 'good' : breakEven > 5 ? 'warn' : 'bad');
+
+  var ctx = document.getElementById('chart2').getContext('2d');
+  if (chart2) { chart2.destroy(); }
+  chart2 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Projected Revenue', data: projData, backgroundColor: 'rgba(119,141,169,.4)', borderColor: '#778da9', borderWidth: 1, order: 3 },
+        { label: 'Actual Revenue', data: actualData, backgroundColor: 'rgba(45,106,79,.65)', borderColor: '#2d6a4f', borderWidth: 1, order: 3 },
+        { label: 'Uncovered Shortfall', data: shortfallData, backgroundColor: 'rgba(196,69,54,.6)', borderColor: '#c44536', borderWidth: 1, order: 3 },
+        { label: 'Annual Debt Service', data: dsLine, type: 'line', borderColor: '#c44536', borderWidth: 2.5, pointRadius: 0, fill: false, order: 1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + fmt(c.raw); } } } },
+      scales: {
+        y: { title: { display: true, text: '$ Millions', font: { family: 'IBM Plex Mono', size: 10 } }, ticks: { callback: function(v) { return '$' + v + 'M'; }, font: { family: 'IBM Plex Mono', size: 10 } } },
+        x: { ticks: { font: { family: 'IBM Plex Mono', size: 10 } } }
+      }
+    }
+  });
+}
+
+/* ─── INIT ─── */
+document.getElementById('slide-total').textContent = TOTAL;
+document.getElementById('progress-fill').style.width = ((currentSlide / TOTAL) * 100) + '%';
+setScenario1('plan2003');
+setScenario2('plan2003');
+</script>
+</body>
+</html>
